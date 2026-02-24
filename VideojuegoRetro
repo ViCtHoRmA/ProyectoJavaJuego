@@ -1,0 +1,86 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class VideojuegoRetro extends JPanel implements Runnable, KeyListener {
+
+    // Configuración de la pantalla
+    private final int ANCHO = 800;
+    private final int ALTO = 600;
+    
+    // Atributos del personaje
+    private int x = 100;
+    private int y = 450;
+    private int velocidad = 5;
+    
+    // Hilo del juego (Game Loop)
+    private Thread gameThread;
+    private boolean jugando = true;
+
+    public VideojuegoRetro() {
+        this.setPreferredSize(new Dimension(ANCHO, ALTO));
+        this.setBackground(Color.BLACK); // Fondo estilo retro
+        this.setFocusable(true);
+        this.addKeyListener(this);
+    }
+
+    // El "Corazón" del juego: se repite constantemente
+    @Override
+    public void run() {
+        while (jugando) {
+            actualizar(); // Mover personajes, detectar colisiones
+            repaint();    // Dibujar de nuevo la pantalla
+            
+            try {
+                Thread.sleep(16); // ~60 FPS
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void actualizar() {
+        // Aquí iría la gravedad si fuera tipo Mario
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Dibujamos al "Héroe" (Imaginalo como una Tortuga Ninja pixelada)
+        g.setColor(Color.GREEN);
+        g.fillRect(x, y, 50, 50); 
+        
+        g.setColor(Color.WHITE);
+        g.drawString("MUEVE CON LAS FLECHAS - AVANCE PROYECTO", 20, 30);
+    }
+
+    // --- CONTROLES ---
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_LEFT) x -= velocidad;
+        if (code == KeyEvent.VK_RIGHT) x += velocidad;
+        if (code == KeyEvent.VK_UP) y -= velocidad;
+        if (code == KeyEvent.VK_DOWN) y += velocidad;
+    }
+
+    @Override public void keyTyped(KeyEvent e) {}
+    @Override public void keyReleased(KeyEvent e) {}
+
+    // Main para arrancar el juego
+    public static void main(String[] args) {
+        JFrame ventana = new JFrame("Mi Juego Retro");
+        VideojuegoRetro juego = new VideojuegoRetro();
+        
+        ventana.add(juego);
+        ventana.pack();
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+        
+        // Iniciar el hilo
+        Thread hilo = new Thread(juego);
+        hilo.start();
+    }
+}
