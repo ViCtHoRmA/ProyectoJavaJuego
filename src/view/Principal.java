@@ -1,27 +1,47 @@
 package view;
 
 import javax.swing.JFrame;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 
-public class GameWindow extends JFrame {
+public class Principal extends JFrame {
 
-    public static final int SCREEN_WIDTH = 900;
-    public static final int SCREEN_HEIGHT = 700;
-    public static final String GAME_TITLE = "Dimension UNET";
+    public static final int screenWidth = 900;
+    public static final int screenHeigth = 700;
+    public static final String gameTitle = "Dimension UNET";
 
-    public GameWindow() {
-        initWindow();
-    }
 
-    public void initWindow() {
-        setTitle(GAME_TITLE);
+    private CardLayout cardLayout;
+    private Container contenedor;
+    private GamePanel gamePanel;
+    private PrincipalMenu principalMenu;
+
+
+    public Principal() {
+        setTitle(gameTitle);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setLocationRelativeTo(null);
-        // Añadimos el panel del menú principal como primer panel visible
-        MainMenuPanel menuPanel = new MainMenuPanel();
-        add(menuPanel);
+
+        cardLayout  = new CardLayout();
+        contenedor = getContentPane();
+        contenedor.setLayout(cardLayout);
+
+
+        principalMenu = new PrincipalMenu(this);
+        gamePanel = new GamePanel();
+
+        contenedor.add(principalMenu, "Menu");
+        contenedor.add(gamePanel, "Juego");
+
+        // Mostrar el menú primero
+        cardLayout.show(contenedor, "Menu");
+
         pack();
+        setLocationRelativeTo(null);
+    }
+
+    public void iniciarJuego() {
+        cardLayout.show(contenedor, "Juego");
+        gamePanel.requestFocusInWindow();
+        gamePanel.iniciarJuego();
     }
 }

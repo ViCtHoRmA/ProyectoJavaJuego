@@ -3,7 +3,7 @@ package controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class ControladorTeclado implements KeyListener {
+public class KeyController implements KeyListener {
 
     // true = tecla presionada, false = tecla suelta
     public boolean moverIzquierda, moverDerecha, atacarPunio, atacarPatada, recoger, pausa, saltar;
@@ -37,6 +37,7 @@ public class ControladorTeclado implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
+
 
     }
 }
