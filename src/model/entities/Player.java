@@ -43,7 +43,7 @@ public class Player extends Entity{
     private final int DURACION_INVENCIBLE = 60; // frames que dura la inv
 
     // piezas recolectadas
-    private int piezasRecogidas = 0;
+    public int piezasRecogidas = 0;
 
 
     // ── Estados visuales ──────────────────────────────────────────────────────

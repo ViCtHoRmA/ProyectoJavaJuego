@@ -9,17 +9,17 @@ import java.awt.Rectangle;
 
 public class MachinePiece {
 
-    public int     x, y;
+    public int x, y;
     public boolean recogida = false;
-    private int    numero;   // del 1 al 5
+    private int numero;   // del 1 al 5
 
     // Animacion de flotacion
-    private float  offsetY    = 0;  // desplazamiento vertical actual
-    private float  tiempoAnim = 0;  // contador que avanza cada frame
+    private float offsetY = 0;  // desplazamiento vertical actual
+    private float tiempoAnim = 0;  // contador que avanza cada frame
 
     public MachinePiece(int x, int y, int numero) {
-        this.x      = x;
-        this.y      = y;
+        this.x = x;
+        this.y = y;
         this.numero = numero;
     }
 
@@ -30,7 +30,7 @@ public class MachinePiece {
         // La pieza flota: sube y baja suavemente usando seno
         // Math.sin devuelve valores entre -1 y 1 que usamos como offset
         tiempoAnim += 0.05f;
-        offsetY     = (float) Math.sin(tiempoAnim) * 5; // oscila 5px arriba y abajo
+        offsetY = (float) Math.sin(tiempoAnim) * 5; // oscila 5px arriba y abajo
     }
 
     public void dibujar(Graphics2D g2d) {
