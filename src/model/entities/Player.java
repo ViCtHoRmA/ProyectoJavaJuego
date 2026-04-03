@@ -1,7 +1,9 @@
 package model.entities;
 
 import controller.KeyController;
+import view.AnimacionSprite;
 import view.GamePanel;
+import view.GestorSprites;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -222,18 +224,39 @@ public class Player extends Entity{
     public void dibujar(Graphics2D g2d) {
         if (!vivo) return;
 
-        // Efecto de parpadeo cuando esta invencible:
-        // cada 6 frames alterna entre visible e invisible
+        // Efecto de parpadeo cuando esta invencible
         if (frameInvencible > 0 && (frameInvencible / 6) % 2 == 0) return;
 
-        dibujarCuerpo(g2d);
+        // Obtener el sprite del gestor
+        AnimacionSprite sprite = GestorSprites.getInstance().jugador;
+
+        // Elegir la fila segun el estado actual del jugador
+        // Fila 0: idle | Fila 1: caminar | Fila 2: idle lado | Fila 3: caminar
+        switch (estado) {
+            case "walk"   -> sprite.setAnimacion(1, 4);
+            case "attack" -> sprite.setAnimacion(2, 4);
+            case "jump"   -> sprite.setAnimacion(3, 4);
+            default       -> sprite.setAnimacion(0, 4); // idle
+        }
+
+        // Actualizar el contador de animacion
+        sprite.actualizar();
+
+        // Dibujar el sprite — voltear si mira a la izquierda
+        // Dibujamos mas grande que el hitbox para que se vea bien
+        int spriteAncho = 80;
+        int spriteAlto  = 100;
+        int offsetX     = (spriteAncho - ancho) / 2; // centrar sobre el hitbox
+
+        sprite.dibujar(g2d,
+                x - offsetX,
+                y - (spriteAlto - alto),
+                spriteAncho, spriteAlto,
+                !miraDerecha  // voltear cuando mira a la izquierda
+        );
+
+        // Barra de vida encima del sprite
         dibujarBarraVida(g2d);
-
-        // Mostrar el area de golpe en DEBUG (puedes quitarlo despues)
-        // g2d.setColor(Color.RED);
-        // g2d.draw(getHitboxAtaque());
-
-
 
     }
 
