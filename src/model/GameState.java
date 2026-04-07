@@ -2,26 +2,15 @@ package model;
 
 public class GameState {
 
-    // ── Estados posibles del juego ────────────────────────────────────────────
-    // Usamos constantes enteras para representar cada estado.
-    // El juego siempre esta en exactamente uno de estos estados.
-
     public static final int JUGANDO = 0;
     public static final int PAUSADO = 1;
     public static final int GAME_OVER = 2;
     public static final int VICTORIA = 3;
 
-    // ── Estado actual ─────────────────────────────────────────────────────────
-    // Empieza en JUGANDO cuando se crea
+
     private int estadoActual = JUGANDO;
-
-    //puntaje
     private int puntaje = 0;
-
-    // ── Nivel actual ──────────────────────────────────────────────────────────
-    // Empieza en el nivel 1
     private int nivelActual = 1;
-
 
 
     public int getEstadoActual() {
@@ -46,9 +35,6 @@ public class GameState {
     }
 
 
-    // ── Metodos de consulta rapida ────────────────────────────────────────────
-    // En vez de escribir gameState.getEstadoActual() == GameState.JUGANDO
-    // podemos escribir gameState.estaJugando() — mas legible
 
     public boolean estaJugando() {
         return estadoActual == JUGANDO;
@@ -63,7 +49,7 @@ public class GameState {
             return estadoActual == VICTORIA;
     }
 
-    //riniciar todo para empezar de nuevo
+
     public void reiniciar() {
         estadoActual = JUGANDO;
         puntaje = 0;

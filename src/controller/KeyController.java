@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyController implements KeyListener {
 
-    // true = tecla presionada, false = tecla suelta
+
     public boolean moverIzquierda, moverDerecha, atacarPunio, atacarPatada, recoger, pausa, saltar;
 
     @Override

@@ -9,9 +9,9 @@ public class MachinePiece {
     public boolean recogida = false;
     private int numero;   // del 1 al 5
 
-    // Animacion de flotacion
-    private float offsetY = 0;  // desplazamiento vertical actual
-    private float tiempoAnim = 0;  // contador que avanza cada frame
+
+    private float offsetY = 0;
+    private float tiempoAnim = 0;
 
     public MachinePiece(int x, int y, int numero) {
         this.x = x;
@@ -19,12 +19,10 @@ public class MachinePiece {
         this.numero = numero;
     }
 
-    // Se llama 60 veces por segundo para animar la pieza
+
     public void actualizar() {
         if (recogida) return;
 
-        // La pieza flota: sube y baja suavemente usando seno
-        // Math.sin devuelve valores entre -1 y 1 que usamos como offset
         tiempoAnim += 0.05f;
         offsetY = (float) Math.sin(tiempoAnim) * 5; // oscila 5px arriba y abajo
     }
@@ -32,7 +30,7 @@ public class MachinePiece {
     public void dibujar(Graphics2D g2d) {
         if (recogida) return;
 
-        // La posicion real incluye el offset de flotacion
+
         int posY = (int) (y + offsetY);
 
         // Sombra debajo de la pieza
@@ -62,7 +60,6 @@ public class MachinePiece {
     }
 
 
-    // Hitbox para detectar cuando el jugador la toca
     public Rectangle getHitbox() {
         return new Rectangle(x, y, 30, 30);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CollisionController {
 
-    //instancias de objetos
+
     private Player jugador;
     private List<Enemy> enemigos;
     private List<MachinePiece> piezas;

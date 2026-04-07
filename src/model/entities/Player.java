@@ -7,62 +7,34 @@ import java.awt.*;
 
 public class Player extends Entity{
 
-    // ── Referencia al teclado ─────────────────────────────────────────────────
-    // El jugador necesita saber que teclas estan presionadas para moverse
-    private KeyController keyController;
-
-    // ── Fisica del salto ──────────────────────────────────────────────────────
-    // velocidadY = que tan rapido sube o baja en este momento
-    // Cuando salta, velocidadY se vuelve negativo (sube)
-    // La gravedad lo va aumentando hasta que toca el suelo
     private float velocidadY = 0;
-    private final float GRAVEDAD = 0.5f; // cuanto aumenta velocidadY cada frame
-    private final float FUERZA_SALTO = -9f; // velocidadY inicial al saltar
-    private boolean enAire = false; // true si esta saltando o cayendo, false si esta en el suelo
-
-
-    //Sistema de ataque
+    private final float GRAVEDAD = 0.5f;
+    private final float FUERZA_SALTO = -9f;
+    private boolean enAire = false;
     public boolean atacando = false;
-    private int tiempoAtaque = 0; // contador para controlar la duracion del ataque
-    private int cooldownAtaque = 0; // contador para controlar el tiempo entre ataques
-    private final int DURACION_ATAQUE = 15; // frames que dura el ataque
-    private final int COOLDOWN_ATAQUE = 20; // frames que debe esperar
-
-    //tipo de ataque
-    // punio = false, patada = true
+    private int tiempoAtaque = 0;
+    private int cooldownAtaque = 0;
+    private final int DURACION_ATAQUE = 15;
+    private final int COOLDOWN_ATAQUE = 20;
     public boolean esPatada = false;
-
-    //invencibilidad temporal
-    // Despues de recibir un golpe el jugador es invencible por unos frames
-    // Esto evita que los enemigos quiten toda la vida de golpe
-    private int frameInvencible = 0; // contador para controlar la duracion de la invencibilidad
-    private final int DURACION_INVENCIBLE = 60; // frames que dura la inv
-
-    // piezas recolectadas
+    private int frameInvencible = 0;
+    private final int DURACION_INVENCIBLE = 60;
     public int piezasRecogidas = 0;
-
-
-    // ── Estados visuales ──────────────────────────────────────────────────────
-    // Usamos un String para saber que animacion mostrar
-    // "idle"    = quieto
-    // "walk"    = caminando
-    // "attack"  = atacando
-    // "hurt"    = recibio un golpe
-    // "jump"    = en el aire
     private String estado = "idle";
 
 
-    // ── Constructor ───────────────────────────────────────────────────────────
+    private KeyController keyController;
+
+
+
     public Player(int x, int y, KeyController keyController) {
-        // Llamamos al constructor de Entity con los valores del jugador:
-        // posicion x, posicion y, ancho 40px, alto 60px, vida 100, velocidad 4
         super(x, y, 40, 60, 100, 2);
         this.keyController = keyController;
     }
 
     @Override
     public void actualizar() {
-        if (!vivo) return; // si esta muerto no hace nada
+        if (!vivo) return;
 
         manejarMovimiento();
         manejarAtaque();
@@ -86,7 +58,7 @@ public class Player extends Entity{
             velocidadY = FUERZA_SALTO;
             enAire = true;
         }
-        // Limitar al jugador dentro de los bordes de la pantalla
+
         if (x < 0) {
             x = 0;
         }
@@ -98,11 +70,8 @@ public class Player extends Entity{
 
     public void manejarAtaque(){
 
-
-        // Reducir el cooldown cada frame
         if (cooldownAtaque > 0) cooldownAtaque--;
 
-        // Solo puede atacar si no esta atacando ya y el cooldown llego a 0
         if (!atacando && cooldownAtaque == 0) {
 
             if (keyController.atacarPunio) {
@@ -131,13 +100,11 @@ public class Player extends Entity{
 
     }
 
-    //gravedad y suelo
     private void aplicarGravedad(){
         if (enAire) {
             velocidadY += GRAVEDAD;
             y += (int) velocidadY;
 
-            // Si toca el suelo, se detiene y se pone en la posicion del suelo
             if (y >= GamePanel.SUELO) {
                 y = GamePanel.SUELO;
                 velocidadY = 0;
@@ -146,19 +113,18 @@ public class Player extends Entity{
         }
     }
 
-    // ── Invencibilidad tras recibir daño ──────────────────────────────────────
+
     private void actualizarInvencibilidad() {
         if (frameInvencible > 0) frameInvencible--;
     }
 
 
-    // ── Actualizar el estado visual segun lo que esta haciendo
     private void actualizarEstado() {
         if (atacando) {
             estado = "attack";
         } else if (enAire) {
             estado = "jump";
-            
+
         } else if (frameInvencible > 0 && !atacando) {
             estado = "hurt";
         } else if (keyController.moverIzquierda || keyController.moverDerecha) {
@@ -171,21 +137,18 @@ public class Player extends Entity{
 
     @Override
     public void recibirDanio(int cantidad) {
-        // Solo recibe daño si no esta en periodo de invencibilidad
         if (frameInvencible == 0) {
             super.recibirDanio(cantidad);
             frameInvencible = DURACION_INVENCIBLE;
         }
     }
 
-    // ── Hitbox del ataque ─────────────────────────────────────────────────────
-    // Es el rectangulo que representa el area donde golpea el punio o patada.
-    // Aparece delante del jugador segun la direccion que mira.
+
     public Rectangle getHitboxAtaque() {
         if (!atacando) return new Rectangle(0, 0, 0, 0);// no hay hitbox si no esta atacando
 
         int hitX;
-        int hitY; // un poco mas alto que el centro del jugador
+        int hitY;
         int hitAncho;
         int hitAlto;
 
@@ -199,21 +162,17 @@ public class Player extends Entity{
             hitY = y + 15;
         }
 
-
-        // Si mira a la derecha el golpe aparece a su derecha, si no a su izquierda
         if (miraDerecha){
-            hitX = x + ancho; // empieza justo al lado derecho del jugador
+            hitX = x + ancho;
         }else {
-            hitX = x - hitAncho; // empieza a la izquierda del jugador, por eso restamos el ancho
+            hitX = x - hitAncho;
         }
-
-
 
         return new Rectangle(hitX, hitY, hitAncho, hitAlto);
     }
 
 
-//dibujar() se llamara 60 veces por segundo para pintar el jugador en su posicion actual dentro del GamePanel
+
     @Override
     public void dibujar(Graphics2D g2d) {
         if (!vivo) return;

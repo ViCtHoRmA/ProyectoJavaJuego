@@ -26,13 +26,11 @@ public class HUDPanel {
     }
 
 
-    // ── Metodo principal — dibuja todo el HUD ─────────────────────────────────
-    // Se llama desde GameController en cada frame
     public void dibujar(Graphics2D g2d) {
         dibujarPanelVida(g2d);
         dibujarPanelPiezas(g2d);
         dibujarPanelPuntaje(g2d);
-        dibujarNivelActual(g2d);
+       // dibujarNivelActual(g2d);
 
         if (tiempoMensaje > 0) {
             dibujarMensajeTemporal(g2d);
@@ -44,11 +42,6 @@ public class HUDPanel {
     private void dibujarPanelVida(Graphics2D g2d){
         g2d.setColor(new Color(0, 0, 0, 160));
         g2d.fillRoundRect(10, 10, 200, 36, 10, 10);
-
-        // Icono de corazon
-        g2d.setColor(new Color(220, 50, 50));
-        g2d.setFont(fuenteNormal);
-        g2d.drawString("♥", 18, 32);
 
         // Etiqueta VIDA
         g2d.setColor(new Color(220, 220, 220));
@@ -89,7 +82,6 @@ public class HUDPanel {
         g2d.drawString(vidaTexto, 68 + (132 - tw) / 2, 29);
     }
 
-    // ── Panel de piezas ───────────────────────────────────────────────────────
     private void dibujarPanelPiezas(Graphics2D g2d) {
 
         // Fondo semitransparente
@@ -99,7 +91,7 @@ public class HUDPanel {
         // Etiqueta
         g2d.setColor(new Color(255, 200, 0));
         g2d.setFont(fuenteNormal);
-        g2d.drawString("PIEZAS:", 18, 74);
+        g2d.drawString("piezas: ", 18, 74);
 
         // Cuadraditos de piezas — 5 en total
         for (int i = 0; i < 5; i++) {
@@ -115,10 +107,7 @@ public class HUDPanel {
                 g2d.setColor(new Color(180, 120, 0));
                 g2d.drawRoundRect(px, py, 18, 18, 4, 4);
 
-                // Simbolo de engranaje
-                g2d.setColor(new Color(120, 70, 0));
-                g2d.setFont(fuenteSmall);
-                g2d.drawString("✦", px + 3, py + 13);
+
             } else {
                 // Pieza pendiente — gris oscuro
                 g2d.setColor(new Color(50, 50, 50));
@@ -146,8 +135,7 @@ public class HUDPanel {
         int    tw    = g2d.getFontMetrics().stringWidth(score);
         g2d.drawString(score, GamePanel.ANCHO - 20 - tw, 40);
     }
-
-    // ── Indicador del nivel actual ────────────────────────────────────────────
+   /*
     private void dibujarNivelActual(Graphics2D g2d) {
 
         // Panel centrado en la parte inferior de la pantalla
@@ -164,7 +152,8 @@ public class HUDPanel {
                 GamePanel.ALTO - 14);
     }
 
-    // ── Mensaje temporal centrado en pantalla ─────────────────────────────────
+    */
+
     private void dibujarMensajeTemporal(Graphics2D g2d) {
 
         // Opacidad que se reduce suavemente al final
