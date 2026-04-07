@@ -47,7 +47,7 @@ public class CollisionController {
             if (jugador.getHitboxAtaque().intersects(enemigo.getHitbox())) {
 
                 //el dano depende del tipo de ataque
-                int danio = jugador.esPatada ? 20 : 12;
+                int danio = jugador.esPatada ? 9 : 6;
                 enemigo.recibirDanio(danio);
 
                 //si el enemigo murio sumar puntos
@@ -60,19 +60,15 @@ public class CollisionController {
 
     // ── 2. Los enemigos golpean al jugador ───────────────────────────────
     private void verificarDanioJugador(){
-        for (Enemy enemigo : enemigos){
-            if (!enemigo.estaVivo()) continue; //ignorar enemigos muertos
+        for (Enemy enemigo : enemigos) {
+            if (!enemigo.estaVivo()) continue;
 
-
-            // Si el enemigo puede atacar en este frame y esta tocando al jugador
-            if (enemigo.puedeAtacar() && enemigo.getHitbox().intersects(jugador.getHitbox())) {
-
+            // El enemigo ya decidio en su propia IA si puede atacar
+            // Solo leemos el flag y aplicamos el daño
+            if (enemigo.danioAplicado) {
                 jugador.recibirDanio(enemigo.getDanio());
-
+                enemigo.danioAplicado = false; // consumir el flag
             }
-
-
-
         }
     }
 
@@ -93,8 +89,6 @@ public class CollisionController {
     private void verificarCondicionesFinales(){
         if (!jugador.estaVivo()) {
             gameState.setEstadoActual(GameState.GAME_OVER);
-        } else if (jugador.piezasRecogidas >= 5) {
-            gameState.setEstadoActual(GameState.VICTORIA);
         }
     }
 

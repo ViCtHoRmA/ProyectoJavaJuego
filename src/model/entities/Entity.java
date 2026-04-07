@@ -1,7 +1,6 @@
 package model.entities;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 
 public abstract class Entity {
 
@@ -32,6 +31,8 @@ public abstract class Entity {
     // ── Estado de vida ────────────────────────────────────────────────────────
     public boolean vivo = true;
 
+
+
     // ── Constructor ───────────────────────────────────────────────────────────
     // Cuando creamos cualquier entidad le pasamos su posicion y tamaño inicial
     public Entity(int x, int y, int ancho, int alto, int vidaMaxima, int velocidad) {
@@ -43,6 +44,9 @@ public abstract class Entity {
         this.vidaActual = vidaMaxima; // empieza con vida completa
         this.velocidad  = velocidad;
     }
+
+
+
 
 
     // ── Metodos abstractos ────────────────────────────────────────────────────

@@ -1,6 +1,5 @@
 package model.entities;
 
-import java.awt.Graphics2D;
 import view.GamePanel;
 
 public abstract class Enemy extends Entity{
@@ -14,12 +13,13 @@ public abstract class Enemy extends Entity{
     protected int danio;
     // puntos que da al morir
     protected int puntos;
+    public boolean danioAplicado = false;
 
     // ── Estado de la IA ───────────────────────────────────────────────────────
     // "patrullando" = camina de un lado a otro sin ver al jugador
     // "persiguiendo" = detecto al jugador y va hacia el
     // "atacando"    = esta lo suficientemente cerca para golpear
-    protected String estadoIA = "patrullando";
+    public String estadoIA = "patrullando";
 
     // ── Patrullaje ────────────────────────────────────────────────────────────
     // El enemigo patrulla entre dos puntos: su posicion inicial +/- rangoPatrulla
@@ -28,7 +28,7 @@ public abstract class Enemy extends Entity{
     protected int direccionPatrulla = 1; // 1 = derecha, -1 = izquierda
 
     // ── Cooldown de ataque ────────────────────────────────────────────────────
-    protected int cooldownAtaque  = 0;
+    public int cooldownAtaque  = 0;
     protected int intervaloAtaque = 90; // frames entre cada ataque del enemigo
 
     // ── Constructor ───────────────────────────────────────────────────────────
@@ -48,28 +48,32 @@ public abstract class Enemy extends Entity{
         if (!vivo) return;
 
         actualizarIA(jugadorX, jugadorY);
-        if (cooldownAtaque > 0) cooldownAtaque--;
     }
 
     // ── Logica de IA ──────────────────────────────────────────────────────────
     private void actualizarIA(int jugadorX, int jugadorY) {
-        // Calculamos la distancia al jugador usando la formula de distancia
-        int distancia = (int) Math.sqrt(
-                Math.pow(jugadorX - x, 2) + Math.pow(jugadorY - y, 2)
-        );
+        int distanciaX = Math.abs(jugadorX - x);
 
-        if (distancia <= radioAtaque) {
-            // Esta muy cerca: atacar
+        // Si esta cerca lo suficiente, dejar de moverse y atacar
+        if (distanciaX <= radioAtaque) {
             estadoIA = "atacando";
-        } else if (distancia <= radioDeteccion) {
-            // Lo ve pero no alcanza: perseguir
+            // Aplicar daño directamente aqui mismo sin esperar CollisionController
+            if (cooldownAtaque == 0) {
+                cooldownAtaque = intervaloAtaque;
+                danioAplicado = true; // flag para que CollisionController lo lea
+            }
+        } else if (distanciaX <= radioDeteccion) {
             estadoIA = "persiguiendo";
+            danioAplicado = false;
             perseguir(jugadorX);
         } else {
-            // No lo ve: patrullar
             estadoIA = "patrullando";
+            danioAplicado = false;
             patrullar();
         }
+
+        if (cooldownAtaque > 0) cooldownAtaque--;
+
     }
 
     // ── Perseguir al jugador ──────────────────────────────────────────────────
@@ -99,7 +103,7 @@ public abstract class Enemy extends Entity{
     // ── El enemigo puede atacar si el cooldown llego a cero ───────────────────
     public boolean puedeAtacar() {
         if (estadoIA.equals("atacando") && cooldownAtaque == 0) {
-            cooldownAtaque = intervaloAtaque; // reinicia el tiempo de espera
+            cooldownAtaque = intervaloAtaque;
             return true;
         }
         return false;

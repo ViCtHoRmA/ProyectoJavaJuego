@@ -1,13 +1,7 @@
 package model.entities;
 
 import controller.KeyController;
-import view.AnimacionSprite;
 import view.GamePanel;
-import view.GestorSprites;
-
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 import java.awt.*;
 
@@ -23,7 +17,7 @@ public class Player extends Entity{
     // La gravedad lo va aumentando hasta que toca el suelo
     private float velocidadY = 0;
     private final float GRAVEDAD = 0.5f; // cuanto aumenta velocidadY cada frame
-    private final float FUERZA_SALTO = -10; // velocidadY inicial al saltar
+    private final float FUERZA_SALTO = -9f; // velocidadY inicial al saltar
     private boolean enAire = false; // true si esta saltando o cayendo, false si esta en el suelo
 
 
@@ -62,7 +56,7 @@ public class Player extends Entity{
     public Player(int x, int y, KeyController keyController) {
         // Llamamos al constructor de Entity con los valores del jugador:
         // posicion x, posicion y, ancho 40px, alto 60px, vida 100, velocidad 4
-        super(x, y, 40, 60, 100, 4);
+        super(x, y, 40, 60, 100, 2);
         this.keyController = keyController;
     }
 
@@ -224,56 +218,18 @@ public class Player extends Entity{
     public void dibujar(Graphics2D g2d) {
         if (!vivo) return;
 
-        // Efecto de parpadeo cuando esta invencible
+        // Efecto parpadeo al recibir daño
         if (frameInvencible > 0 && (frameInvencible / 6) % 2 == 0) return;
 
-        // Obtener el sprite del gestor
-        AnimacionSprite sprite = GestorSprites.getInstance().jugador;
-
-        // Elegir la fila segun el estado actual del jugador
-        // Fila 0: idle | Fila 1: caminar | Fila 2: idle lado | Fila 3: caminar
-        switch (estado) {
-            case "walk"   -> sprite.setAnimacion(1, 4);
-            case "attack" -> sprite.setAnimacion(2, 4);
-            case "jump"   -> sprite.setAnimacion(3, 4);
-            default       -> sprite.setAnimacion(0, 4); // idle
-        }
-
-        // Actualizar el contador de animacion
-        sprite.actualizar();
-
-        // Dibujar el sprite — voltear si mira a la izquierda
-        // Dibujamos mas grande que el hitbox para que se vea bien
-        int spriteAncho = 80;
-        int spriteAlto  = 100;
-        int offsetX     = (spriteAncho - ancho) / 2; // centrar sobre el hitbox
-
-        sprite.dibujar(g2d,
-                x - offsetX,
-                y - (spriteAlto - alto),
-                spriteAncho, spriteAlto,
-                !miraDerecha  // voltear cuando mira a la izquierda
-        );
-
-        // Barra de vida encima del sprite
-        dibujarBarraVida(g2d);
-
-    }
-
-    private void dibujarCuerpo(Graphics2D g2d) {
-        // Por ahora dibujamos formas geometricas simples.
-        // En la Fase 7 reemplazaremos esto con sprites reales.
-
-        // Color del cuerpo segun el estado
         Color colorCuerpo;
         switch (estado) {
-            case "attack" -> colorCuerpo = new Color(255, 200, 0);  // amarillo al atacar
-            case "hurt"   -> colorCuerpo = new Color(255, 80, 80);  // rojo al recibir daño
-            case "jump"   -> colorCuerpo = new Color(80, 180, 255); // azul claro al saltar
-            default       -> colorCuerpo = new Color(60, 120, 220); // azul normal
+            case "attack" -> colorCuerpo = new Color(255, 200, 0);
+            case "hurt" -> colorCuerpo = new Color(255, 80, 80);
+            case "jump" -> colorCuerpo = new Color(80, 180, 255);
+            default -> colorCuerpo = new Color(60, 120, 220);
         }
 
-        // Cuerpo (torso)
+        // Cuerpo
         g2d.setColor(colorCuerpo);
         g2d.fillRoundRect(x + 5, y + 20, ancho - 10, alto - 20, 6, 6);
 
@@ -281,37 +237,31 @@ public class Player extends Entity{
         g2d.setColor(new Color(255, 220, 177));
         g2d.fillOval(x + 8, y - 10, ancho - 16, 30);
 
-        // Ojos — cambian segun la direccion
+        // Ojo
         g2d.setColor(Color.BLACK);
-        if (miraDerecha) {
-            g2d.fillOval(x + 18, y - 4, 5, 5);
-        } else {
-            g2d.fillOval(x + ancho - 23, y - 4, 5, 5);
-        }
+        if (miraDerecha) g2d.fillOval(x + 18, y - 4, 5, 5);
+        else             g2d.fillOval(x + ancho - 23, y - 4, 5, 5);
 
         // Piernas
         g2d.setColor(new Color(40, 80, 160));
         if (estado.equals("walk")) {
-            // Simula caminar alternando la posicion de las piernas
-            // usando el tiempo (System.currentTimeMillis) para oscilar
-            long t = System.currentTimeMillis() / 100;
-            int offset = (int)(Math.sin(t) * 5);
-            g2d.fillRoundRect(x + 5,          y + alto - 22, 12, 22, 4, 4);
+            long t      = System.currentTimeMillis() / 100;
+            int  offset = (int)(Math.sin(t) * 5);
+            g2d.fillRoundRect(x + 5,          y + alto - 22,          12, 22, 4, 4);
             g2d.fillRoundRect(x + ancho - 17, y + alto - 22 + offset, 12, 22, 4, 4);
         } else {
             g2d.fillRoundRect(x + 5,          y + alto - 22, 12, 22, 4, 4);
             g2d.fillRoundRect(x + ancho - 17, y + alto - 22, 12, 22, 4, 4);
         }
 
-        // Brazo de ataque
+        // Puño al atacar
         if (atacando) {
             g2d.setColor(new Color(255, 220, 177));
-            if (miraDerecha) {
-                g2d.fillOval(x + ancho - 5, y + 18, 18, 14);
-            } else {
-                g2d.fillOval(x - 13, y + 18, 18, 14);
-            }
+            if (miraDerecha) g2d.fillOval(x + ancho - 5, y + 18, 18, 14);
+            else             g2d.fillOval(x - 13,         y + 18, 18, 14);
         }
+
+        dibujarBarraVida(g2d);
     }
 
 
