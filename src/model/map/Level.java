@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import model.entities.ZombieProfessor;
-import model.entities.Enemy;
-import model.entities.ZombieStudent;
+import model.entities.*;
 import model.items.MachinePiece;
 import view.GamePanel;
 
@@ -63,40 +61,47 @@ public class Level {
 
 
     private void configurarNivel1() {
-        enemigos.add(new ZombieStudent(300, GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(450, GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(600, GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(720, GamePanel.SUELO));
+        int suelo = GamePanel.SUELO_NIVEL1;
 
-        piezas.add(new MachinePiece(200, GamePanel.SUELO - 40, 1));
-        piezas.add(new MachinePiece(580, GamePanel.SUELO - 40, 2));
+        enemigos.add(new ZombieStudent(300, suelo - 115));
+        enemigos.add(new ZombieStudent(450, suelo - 115));
+        enemigos.add(new ZombieStudent(600, suelo - 115));
+        enemigos.add(new ZombieStudent(750, suelo - 115));
+        enemigos.add(new ZombieProfessor(650, suelo - 130));
+
+        piezas.add(new MachinePiece(250, suelo - 175, 1));
+        piezas.add(new MachinePiece(650, suelo - 175, 2));
     }
 
 
     private void configurarNivel2() {
-        enemigos.add(new ZombieStudent(280,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(420,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(560,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(700,  GamePanel.SUELO));
-        enemigos.add(new ZombieProfessor(480, GamePanel.SUELO));
-        enemigos.add(new ZombieProfessor(660, GamePanel.SUELO));
+        int suelo = GamePanel.SUELO_NIVEL2;
 
-        piezas.add(new MachinePiece(350, GamePanel.SUELO - 40, 3));
-        piezas.add(new MachinePiece(620, GamePanel.SUELO - 40, 4));
+        enemigos.add(new ZombieStudent(300, suelo - 115));
+        enemigos.add(new ZombieStudent(440,suelo - 115));
+        enemigos.add(new ZombieStudent(580, suelo - 115));
+        enemigos.add(new ZombieStudent(720, suelo - 115));
+        enemigos.add(new ZombieProfessor(380, suelo - 130));
+        enemigos.add(new ZombieProfessor(650, suelo - 130));
+
+        piezas.add(new MachinePiece(280, suelo - 175, 3));
+        piezas.add(new MachinePiece(660, suelo - 175, 4));
 
     }
 
 
     private void configurarNivel3() {
-        enemigos.add(new ZombieStudent(300,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(450,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(600,  GamePanel.SUELO));
-        enemigos.add(new ZombieStudent(720,  GamePanel.SUELO));
-        enemigos.add(new ZombieProfessor(380, GamePanel.SUELO));
-        enemigos.add(new ZombieProfessor(540, GamePanel.SUELO));
-        enemigos.add(new ZombieProfessor(680, GamePanel.SUELO));
+        int suelo = GamePanel.SUELO_NIVEL3;
 
-        piezas.add(new MachinePiece(400, GamePanel.SUELO - 40, 5));
+        enemigos.add(new ZombieStudent(300, suelo - 115));
+        enemigos.add(new ZombieStudent(440,suelo - 115));
+        enemigos.add(new ZombieStudent(580,  suelo - 115));
+        enemigos.add(new ZombieStudent(720,suelo - 115));
+        enemigos.add(new ZombieProfessor(370, suelo - 115));
+        enemigos.add(new ZombieProfessor(550, suelo - 115));
+        enemigos.add(new ZombieProfessor(730, suelo - 115));
+
+        piezas.add(new MachinePiece(430, suelo - 175, 5));
     }
 
 
@@ -107,9 +112,6 @@ public class Level {
 
 
     public void dibujarNombre(Graphics2D g2d) {
-        g2d.setColor(new Color(0, 0, 0, 120));
-        g2d.fillRoundRect(GamePanel.ANCHO / 2 - 120, 10, 240, 30, 10, 10);
-
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("Arial Black", Font.BOLD, 14));
         String texto = "Nivel " + numero + ": " + nombre;

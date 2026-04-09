@@ -91,10 +91,12 @@ public abstract class Enemy extends Entity{
         return false;
     }
 
-    public int getDanio()  { return danio; }
-    public int getPuntos() { return puntos; }
-
-
+    public int getDanio()  {
+        return danio;
+    }
+    public int getPuntos() {
+        return puntos;
+    }
     @Override
     public void actualizar() {}
 

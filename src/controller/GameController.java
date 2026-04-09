@@ -27,18 +27,14 @@ public class GameController {
     private int indiceNivelActual = 0;
     private boolean enTransicion = false;
     private int tiempoTransicion = 0;
-    private static final int DURACION_TRANSICION = 180; // frames que dura la
-
-
-
-    // Cuando el jugador recoge una pieza mostramos un mensaje por unos segundos
+    private static final int DURACION_TRANSICION = 180;
+    private int sueloActual = GamePanel.SUELO_NIVEL1;
     private String mensajeTemporal = "";
-    private int tiempoMensaje = 0; // contador para controlar cuanto tiempo mostrar el mensaje
-    private static final int DURACION_MENSAJE = 120; // frames que dura el mensaje (2 segundos a 60 FPS)
-
-
-
+    private int tiempoMensaje = 0;
+    private static final int DURACION_MENSAJE = 120;
     private int piezasAnteriores = 0;
+
+
 
     public GameController(GamePanel panel, KeyController keyController) {
         this.panel = panel;
@@ -51,10 +47,10 @@ public class GameController {
 
     private void inicializarJuego(){
         gameState = new GameState();
-        jugador = new Player(80, GamePanel.SUELO, keyController);
+        jugador = new Player(80, GamePanel.SUELO_NIVEL1 - 120, keyController);
 
         niveles = new ArrayList<>();
-        niveles.add(new Level(1, "Biblioteca UNET", "fondo_nivel1.jpeg"));
+        niveles.add(new Level(1, "Edificio A UNET", "fondo_nivel1.png"));
         niveles.add(new Level(2, "Plaza Bolivar UNET", "fondo_nivel2.jpg"));
         niveles.add(new Level(3, "Laboratorio UNET", "fondo_nivel3.jpg"));
 
@@ -67,13 +63,22 @@ public class GameController {
 
     private void cargarNivel(int indice){
         nivelActual = niveles.get(indice);
+        switch (indiceNivelActual){
+            case 0 -> sueloActual = GamePanel.SUELO_NIVEL1;
+            case 1 -> sueloActual = GamePanel.SUELO_NIVEL2;
+            case 2 -> sueloActual = GamePanel.SUELO_NIVEL3;
+        }
+
+        jugador.setSuelo(sueloActual);
+        jugador.y = sueloActual - jugador.alto;
+
         gameState.setNivelActual(nivelActual.getNumero());
 
-        // Reiniciar posicion del jugador al inicio del nivel
+        jugador.setSuelo(sueloActual);
         jugador.x = 80;
-        jugador.y = GamePanel.SUELO;
+        jugador.y = sueloActual - jugador.alto;
 
-        // Crear el controlador de colisiones con las entidades del nivel actual
+
         collisionController = new CollisionController(jugador, nivelActual.getEnemigos(), nivelActual.getPiezas(), gameState);
         mostrarMensaje("Nivel " + nivelActual.getNumero() + ": " + nivelActual.getNombre());
     }
@@ -142,12 +147,6 @@ public class GameController {
         boolean enemigosDerrotados = nivelActual.todosEnemigosDerrotados();
         boolean piezasRecogidas    = nivelActual.todasPiezasRecogidas();
 
-        // Mostrar pistas al jugador sobre qué le falta
-        if (enemigosDerrotados && !piezasRecogidas) {
-            mostrarMensaje("¡Derrota los zombies y recoge todas las piezas!");
-        }
-
-        // Solo avanza si se cumplen las DOS condiciones
         if (enemigosDerrotados && piezasRecogidas) {
             nivelActual.setCompletado();
 
@@ -156,7 +155,7 @@ public class GameController {
             } else {
                 enTransicion     = true;
                 tiempoTransicion = DURACION_TRANSICION;
-                mostrarMensaje("Nivel completado, llenado al siguiente nivel");
+                mostrarMensaje("Nivel completado, llendo al siguiente nivel");
             }
         }
     }
@@ -172,7 +171,7 @@ public class GameController {
     private void verificarMensajePieza() {
         if (jugador.piezasRecogidas > piezasAnteriores) {
             piezasAnteriores = jugador.piezasRecogidas;
-            mostrarMensaje("¡Pieza " + jugador.piezasRecogidas + " /5 recogida");
+            mostrarMensaje("Pieza " + jugador.piezasRecogidas + " /5 recogida");
         }
     }
 
@@ -193,34 +192,23 @@ public class GameController {
     public void dibujar(Graphics2D g2d) {
         nivelActual.dibujarFondo(g2d);
 
-        // 2. Piezas del nivel actual
         for (MachinePiece p : nivelActual.getPiezas()) {
             p.dibujar(g2d);
         }
 
-        // 3. Enemigos del nivel actual
         for (Enemy e : nivelActual.getEnemigos()) {
             e.dibujar(g2d);
         }
 
-        // 4. Jugador
         jugador.dibujar(g2d);
-
-        // 5. Nombre del nivel
         nivelActual.dibujarNombre(g2d);
-
-        // 6. HUD completo
         hud.dibujar(g2d);
-
-        // 7. Pantalla de transicion entre niveles
         if (enTransicion) dibujarTransicion(g2d);
-
-        // 8. Pantallas de estado — solo una a la vez
-        if      (gameState.estaGameOver()){
+        if (gameState.estaGameOver()){
             hud.dibujarPantallaGameOver(g2d);
-        } else if (gameState.estaVictoria()){
+        }else if (gameState.estaVictoria()){
             hud.dibujarPantallaVictoria(g2d);
-        } else if (gameState.estaPausado()){
+        }else if (gameState.estaPausado()){
             hud.dibujarPantallaPausa(g2d);
         }
     }
@@ -229,8 +217,7 @@ public class GameController {
 
 
         float oscuridad = 1f - ((float) tiempoTransicion / DURACION_TRANSICION);
-        g2d.setColor(new Color(0, 0, 0,
-                Math.min(200, (int)(oscuridad * 255))));
+        g2d.setColor(new Color(0, 0, 0, Math.min(200, (int)(oscuridad * 255))));
         g2d.fillRect(0, 0, GamePanel.ANCHO, GamePanel.ALTO);
 
 
@@ -239,12 +226,12 @@ public class GameController {
             g2d.setColor(Color.WHITE);
             g2d.setFont(new Font("Arial Black", Font.BOLD, 36));
             String txt = "Nivel " + siguiente;
-            int    tw  = g2d.getFontMetrics().stringWidth(txt);
+            int tw = g2d.getFontMetrics().stringWidth(txt);
             g2d.drawString(txt, GamePanel.ANCHO / 2 - tw / 2, GamePanel.ALTO  / 2 - 20);
 
             g2d.setFont(new Font("Arial", Font.ITALIC, 18));
             String sub = niveles.get(indiceNivelActual + 1).getNombre();
-            int    sw  = g2d.getFontMetrics().stringWidth(sub);
+            int sw  = g2d.getFontMetrics().stringWidth(sub);
             g2d.setColor(new Color(200, 200, 200));
             g2d.drawString(sub, GamePanel.ANCHO / 2 - sw / 2, GamePanel.ALTO  / 2 + 20);
         }

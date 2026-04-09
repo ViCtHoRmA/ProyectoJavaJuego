@@ -13,28 +13,6 @@ public class GameState {
     private int nivelActual = 1;
 
 
-    public int getEstadoActual() {
-        return estadoActual;
-    }
-    public int getPuntaje() {
-        return puntaje;
-    }
-    public int getNivelActual() {
-        return nivelActual;
-    }
-
-
-    public void setEstadoActual(int nuevoEstado) {
-        estadoActual = nuevoEstado;
-    }
-    public void setPuntaje(int cantidad) {
-        puntaje += cantidad;
-    }
-    public void setNivelActual(int nivel) {
-        nivelActual = nivel;
-    }
-
-
 
     public boolean estaJugando() {
         return estadoActual == JUGANDO;
@@ -54,6 +32,27 @@ public class GameState {
         estadoActual = JUGANDO;
         puntaje = 0;
         nivelActual = 1;
+    }
+
+
+    public int getEstadoActual() {
+        return estadoActual;
+    }
+    public int getPuntaje() {
+        return puntaje;
+    }
+    public int getNivelActual() {
+        return nivelActual;
+    }
+
+    public void setEstadoActual(int nuevoEstado) {
+        estadoActual = nuevoEstado;
+    }
+    public void setPuntaje(int cantidad) {
+        puntaje += cantidad;
+    }
+    public void setNivelActual(int nivel) {
+        nivelActual = nivel;
     }
 
 }

@@ -1,13 +1,21 @@
 package model.items;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
 public class MachinePiece {
 
-    public int x, y;
+    public int x;
+    public int y;
     public boolean recogida = false;
-    private int numero;   // del 1 al 5
+    private int numero;
+
+    private BufferedImage[] frames;
+    private int frameActual = 0;
+    private int contadorAnim = 0;
+    private final int VELOCIDAD_ANIM = 8;
 
 
     private float offsetY = 0;
@@ -17,6 +25,21 @@ public class MachinePiece {
         this.x = x;
         this.y = y;
         this.numero = numero;
+        cargarFrames();
+    }
+
+    private void cargarFrames(){
+        frames = new BufferedImage[4];
+        for (int i = 0; i < 4; i++) {
+            try {
+                String ruta = "/sprites/pieza/frame_" + i + ".png";
+                var stream = getClass().getResourceAsStream(ruta);
+                frames[i] = ImageIO.read(stream);
+            } catch (Exception e) {
+                System.out.println("No se pudo cargar pieza_maquina/frame_" + i + "  " + e.getMessage());
+                frames[i] = null;
+            }
+        }
     }
 
 
@@ -24,39 +47,21 @@ public class MachinePiece {
         if (recogida) return;
 
         tiempoAnim += 0.05f;
-        offsetY = (float) Math.sin(tiempoAnim) * 5; // oscila 5px arriba y abajo
+        offsetY = (float) Math.sin(tiempoAnim) * 5;
+
+        contadorAnim++;
+        if (contadorAnim >= VELOCIDAD_ANIM){
+            contadorAnim = 0;
+            frameActual = (frameActual + 1) % 4;
+        }
     }
 
     public void dibujar(Graphics2D g2d) {
         if (recogida) return;
 
-
-        int posY = (int) (y + offsetY);
-
-        // Sombra debajo de la pieza
-        g2d.setColor(new Color(0, 0, 0, 60));
-        g2d.fillOval(x + 2, y + 32, 26, 6);
-
-        // Fondo amarillo brillante — engranaje
-        g2d.setColor(new Color(255, 200, 0));
-        g2d.fillRoundRect(x, posY, 30, 30, 8, 8);
-
-        // Borde dorado
-        g2d.setColor(new Color(200, 140, 0));
-        g2d.setStroke(new BasicStroke(2));
-        g2d.drawRoundRect(x, posY, 30, 30, 8, 8);
-        g2d.setStroke(new BasicStroke(1)); // restaurar el grosor
-
-        // Simbolo de engranaje (circulo central + numero)
-        g2d.setColor(new Color(120, 80, 0));
-        g2d.fillOval(x + 8, posY + 8, 14, 14);
-        g2d.setColor(new Color(255, 220, 100));
-        g2d.setFont(new Font("Arial", Font.BOLD, 10));
-        g2d.drawString(String.valueOf(numero), x + 12, posY + 20);
-
-        // Brillo en la esquina superior
-        g2d.setColor(new Color(255, 255, 200, 180));
-        g2d.fillOval(x + 4, posY + 4, 8, 6);
+        if (frames != null && frames[frameActual] != null){
+            g2d.drawImage(frames[frameActual],x,y,40,40,null);
+        }
     }
 
 

@@ -41,8 +41,8 @@ public class PrincipalMenu extends JPanel {
         titulo.setForeground(colorTitulo);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel("¿Puedes volver a tu dimensión?", SwingConstants.CENTER);
-        subtitulo.setFont(new Font("Arial", Font.ITALIC, 16));
+        JLabel subtitulo = new JLabel("Mas peligroso que cualquier parcial", SwingConstants.CENTER);
+        subtitulo.setFont(new Font("Arial", Font.BOLD, 16));
         subtitulo.setForeground(colorSubtitulo);
         subtitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -65,7 +65,6 @@ public class PrincipalMenu extends JPanel {
         JButton btnSalir    = crearBoton("SALIR");
 
 
-        //action listener de los botones del menu
 
         btnJugar.addActionListener((ActionEvent e) -> iniciarJuego());
         btnControles.addActionListener((ActionEvent e) -> mostrarControles());
@@ -92,7 +91,7 @@ public class PrincipalMenu extends JPanel {
         return btn;
     }
 
-    // action event de los botones
+
     private void iniciarJuego() {
         ventana.iniciarJuego();
     }
@@ -102,12 +101,11 @@ public class PrincipalMenu extends JPanel {
         JOptionPane.showMessageDialog(this,          """
                             CONTROLES
                 ─────────────────────────────────
-                Mover izquierda  ->  Tecla A  o  <-
-                Mover derecha    ->  Tecla D  o  ->
+                Mover izquierda  ->  Tecla A  o  flecha izquierda
+                Mover derecha    ->  Tecla D  o  flecha derecha
                 Saltar           ->  Tecla W  o  flecha arriba
-                Atacar (puño)    ->  J
-                Atacar (patada)  ->  K
-                Recoger ítem     ->  E
+                Ataque debil     ->  J
+                Ataque fuerte    ->  K
                 Pausa            ->  ESC
                 """, "Controles", JOptionPane.PLAIN_MESSAGE);
     }

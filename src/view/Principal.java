@@ -21,7 +21,7 @@ public class Principal extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        cardLayout  = new CardLayout();
+        cardLayout = new CardLayout();
         contenedor = getContentPane();
         contenedor.setLayout(cardLayout);
 
@@ -32,7 +32,6 @@ public class Principal extends JFrame {
         contenedor.add(principalMenu, "Menu");
         contenedor.add(gamePanel, "Juego");
 
-        // Mostrar el menú primero
         cardLayout.show(contenedor, "Menu");
 
         pack();

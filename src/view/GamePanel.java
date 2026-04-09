@@ -9,10 +9,12 @@ import controller.KeyController;
 public class GamePanel extends JPanel implements Runnable {
 
 
-    public static final int ANCHO     = Principal.screenWidth;
-    public static final int ALTO      = Principal.screenHeigth;
-    public static final int FPS       = 60;
-    public static final int SUELO     = 430; // coordenada Y del suelo
+    public static final int ANCHO = Principal.screenWidth;
+    public static final int ALTO = Principal.screenHeigth;
+    public static final int FPS = 60;
+    public static final int SUELO_NIVEL1 = 550;
+    public static final int SUELO_NIVEL2 = 660;
+    public static final int SUELO_NIVEL3 = 480;
 
 
     private Thread hiloJuego;
@@ -40,18 +42,18 @@ public class GamePanel extends JPanel implements Runnable {
     public void run() {
 
         double tiempoPorFrame = 1_000_000_000.0 / FPS;
-        double delta          = 0;
-        long   tiempoAnterior = System.nanoTime();
+        double time = 0;
+        long tiempoAnterior = System.nanoTime();
 
         while (hiloJuego != null) {
             long tiempoActual = System.nanoTime();
-            delta += (tiempoActual - tiempoAnterior) / tiempoPorFrame;
+            time += (tiempoActual - tiempoAnterior) / tiempoPorFrame;
             tiempoAnterior = tiempoActual;
 
-            if (delta >= 1) {
+            if (time >= 1) {
                 actualizar();
                 repaint();
-                delta--;
+                time--;
             }
         }
     }
