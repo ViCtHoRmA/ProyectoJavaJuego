@@ -14,6 +14,7 @@ public class CollisionController {
     private List<Enemy> enemigos;
     private List<MachinePiece> piezas;
     private GameState gameState;
+    private SoundManager soundManager;
 
     public CollisionController(Player jugador, List<Enemy> enemigos, List<MachinePiece> piezas, GameState gameState) {
         this.jugador = jugador;
@@ -43,9 +44,11 @@ public class CollisionController {
 
                 int danio = jugador.esPatada ? 7 : 5;
                 enemigo.recibirDanio(danio);
+                SoundManager.getInstance().reproducir("golpe");
 
                 if (!enemigo.estaVivo()){
                     gameState.setPuntaje(enemigo.getPuntos());
+                    SoundManager.getInstance().reproducir("muerte_zombie");
                 }
             }
         }
@@ -70,6 +73,7 @@ public class CollisionController {
             if (jugador.getHitbox().intersects(pieza.getHitbox())) {
                 pieza.recogida = true;
                 jugador.piezasRecogidas++;
+                SoundManager.getInstance().reproducir("recoger");
             }
         }
     }
@@ -77,6 +81,8 @@ public class CollisionController {
 
     private void verificarCondicionesFinales(){
         if (!jugador.estaVivo()) {
+            SoundManager.getInstance().detener("musica");
+            SoundManager.getInstance().reproducir("game_over");
             gameState.setEstadoActual(GameState.GAME_OVER);
         }
     }

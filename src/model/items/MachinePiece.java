@@ -18,7 +18,7 @@ public class MachinePiece {
     private final int VELOCIDAD_ANIM = 8;
 
 
-    private float offsetY = 0;
+    private float piezaFlotacion = 0;
     private float tiempoAnim = 0;
 
     public MachinePiece(int x, int y, int numero) {
@@ -47,7 +47,7 @@ public class MachinePiece {
         if (recogida) return;
 
         tiempoAnim += 0.05f;
-        offsetY = (float) Math.sin(tiempoAnim) * 5;
+        piezaFlotacion = (float) Math.sin(tiempoAnim) * 5;
 
         contadorAnim++;
         if (contadorAnim >= VELOCIDAD_ANIM){

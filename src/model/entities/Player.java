@@ -1,6 +1,7 @@
 package model.entities;
 
 import controller.KeyController;
+import controller.SoundManager;
 import view.GamePanel;
 
 import java.awt.*;
@@ -162,6 +163,7 @@ public class Player extends Entity{
         if (frameInvencible == 0) {
             super.recibirDanio(cantidad);
             frameInvencible = DURACION_INVENCIBLE;
+            SoundManager.getInstance().reproducir("danio_jugador");
         }
     }
 

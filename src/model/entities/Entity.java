@@ -33,7 +33,7 @@ public abstract class Entity {
     protected BufferedImage[] framesActuales;
     protected int frameActual = 0;
     protected int contadorAnim = 0;
-    protected int velocidadAnim = 8;
+    protected int velocidadAnim = 11;
 
 
     public abstract void actualizar();
@@ -45,8 +45,8 @@ public abstract class Entity {
         for (int i = 0; i < 4; i++){
             try {
                 String ruta = "/sprites/" + carpeta + "/frame_" + i + ".png";
-                var stream = getClass().getResourceAsStream(ruta);
-                frames[i] = ImageIO.read(stream);
+                var imagen = getClass().getResourceAsStream(ruta);
+                frames[i] = ImageIO.read(imagen);
             }catch (Exception e){
                 System.out.println("mo se pudo cargar: " + carpeta + "/frame_" + i + "  " + e.getMessage());
                 frames[i] = null;

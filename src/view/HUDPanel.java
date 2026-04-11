@@ -141,7 +141,7 @@ public class HUDPanel {
         g2d.drawString("PERDISTE", GamePanel.ANCHO / 2 - perdio / 2, GamePanel.ALTO  / 2 - 45);
 
         g2d.setColor(new Color(200, 180, 180));
-        g2d.setFont(new Font("Arial", Font.BOLD, 14));
+        g2d.setFont(new Font("Arial", Font.BOLD, 12));
         String mensajePerdiste = "Los zombies te atraparon, Candy estara triste porque no regresaste.";
         int perdioMensaje = g2d.getFontMetrics().stringWidth(mensajePerdiste);
         g2d.drawString(mensajePerdiste, GamePanel.ANCHO / 2 - perdioMensaje / 2, GamePanel.ALTO  / 2 + 5);

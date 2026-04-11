@@ -15,7 +15,7 @@ public class ZombieProfessor extends Enemy{
 
 
     public ZombieProfessor(int x, int y) {
-        super(x, y, 85, 130, 250, 2, 220, 55, 18, 300);
+        super(x, y, 85, 130, 200, 2, 220, 55, 15, 300);
         this.intervaloAtaque = 80;
         framesCaminarDerecha = cargarFrames("zombie_profesor/caminar_derecha");
         framesCaminarIzquierda = cargarFrames("zombie_profesor/caminar_izquierda");

@@ -22,6 +22,7 @@ public class GameController {
     private Level nivelActual;
     private GameState gameState;
     private CollisionController collisionController;
+    private SoundManager soundManager;
 
 
     private int indiceNivelActual = 0;
@@ -51,12 +52,17 @@ public class GameController {
 
         niveles = new ArrayList<>();
         niveles.add(new Level(1, "Edificio A UNET", "fondo_nivel1.png"));
-        niveles.add(new Level(2, "Plaza Bolivar UNET", "fondo_nivel2.jpg"));
+        niveles.add(new Level(2, "Plaza Bolivar UNET", "fondo_nivel2.jpeg"));
         niveles.add(new Level(3, "Laboratorio UNET", "fondo_nivel3.jpg"));
 
         indiceNivelActual = 0;
         hud = new HUDPanel(gameState, jugador);
         cargarNivel(indiceNivelActual);
+
+        soundManager = SoundManager.getInstance();
+        if (!soundManager.estaReproduciendo("musica")) {
+            soundManager.reproducirLoop("musica");
+        }
 
 
     }
@@ -151,6 +157,8 @@ public class GameController {
             nivelActual.setCompletado();
 
             if (indiceNivelActual == niveles.size() - 1) {
+                soundManager.detener("musica");
+                soundManager.reproducir("victoria");
                 gameState.setEstadoActual(GameState.VICTORIA);
             } else {
                 enTransicion     = true;
@@ -177,7 +185,7 @@ public class GameController {
 
     private void mostrarMensaje(String mensaje) {
         mensajeTemporal = mensaje;        // para dibujarTransicion()
-        tiempoMensaje   = DURACION_MENSAJE;
+        tiempoMensaje = DURACION_MENSAJE;
         hud.mostrarMensaje(mensaje);
     }
 
@@ -214,7 +222,6 @@ public class GameController {
     }
 
     private void dibujarTransicion(Graphics2D g2d) {
-
 
         float oscuridad = 1f - ((float) tiempoTransicion / DURACION_TRANSICION);
         g2d.setColor(new Color(0, 0, 0, Math.min(200, (int)(oscuridad * 255))));

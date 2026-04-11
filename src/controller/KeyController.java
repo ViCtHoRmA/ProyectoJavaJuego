@@ -21,10 +21,10 @@ public class KeyController implements KeyListener {
         if (tecla == KeyEvent.VK_W || tecla == KeyEvent.VK_UP) {
             saltar = true;
         }
-        if (tecla == KeyEvent.VK_J) {
+        if (tecla == KeyEvent.VK_X) {
             atacarPunio = true;
         }
-        if (tecla == KeyEvent.VK_K){
+        if (tecla == KeyEvent.VK_Z){
             atacarPatada = true;
         }
         if (tecla == KeyEvent.VK_ESCAPE) {
@@ -45,14 +45,11 @@ public class KeyController implements KeyListener {
         if (tecla == KeyEvent.VK_W || tecla == KeyEvent.VK_UP){
             saltar = false;
         }
-        if (tecla == KeyEvent.VK_J) {
+        if (tecla == KeyEvent.VK_X) {
             atacarPunio = false;
         }
-        if (tecla == KeyEvent.VK_K) {
+        if (tecla == KeyEvent.VK_Z) {
             atacarPatada = false;
-        }
-        if (tecla == KeyEvent.VK_E) {
-            recoger = false;
         }
         if (tecla == KeyEvent.VK_ESCAPE) {
             pausa = false;

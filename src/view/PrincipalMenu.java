@@ -1,14 +1,17 @@
 package view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.IOException;
 
 public class PrincipalMenu extends JPanel {
 
 
 
-    private static final Color colorFondo = new Color(0, 14, 92);
+    //private static final Color colorFondo = new Color(0, 14, 92);
     private static final Color colorTitulo = new Color(255, 255, 255);
     private static final Color colorSubtitulo = new Color(200, 200, 200);
     private static final Color colorBtnFondo = new Color(40, 40, 80);
@@ -16,21 +19,39 @@ public class PrincipalMenu extends JPanel {
 
 
     private Principal ventana;
+    private Image imagenFondo;
 
     public PrincipalMenu(Principal ventana) {
         this.ventana = ventana;
 
+        try {
+            imagenFondo = ImageIO.read(new File("resources/fondo_menu.png"));
+        } catch (IOException e) {
+            System.err.println("No se pudo cargar la imagen de fondo del menú.");
+            e.printStackTrace();
+        }
         setPreferredSize(new Dimension(Principal.screenWidth, Principal.screenHeigth));
-        setBackground(colorFondo);
+        //setBackground(colorFondo);
         setLayout(new BorderLayout());
 
         add(crearPanelTitulo(), BorderLayout.NORTH);
         add(crearPanelBotones(), BorderLayout.CENTER);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (imagenFondo != null) {
+            g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
     private JPanel crearPanelTitulo() {
         JPanel panel = new JPanel();
-        panel.setBackground(colorFondo);
+        //panel.setBackground(colorFondo);
+        panel.setOpaque(false);
+
+
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createRaisedBevelBorder());
         panel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -56,7 +77,10 @@ public class PrincipalMenu extends JPanel {
 
     private JPanel crearPanelBotones() {
         JPanel panel = new JPanel();
-        panel.setBackground(colorFondo);
+        //panel.setBackground(colorFondo);
+        panel.setOpaque(false);
+
+
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
@@ -104,8 +128,8 @@ public class PrincipalMenu extends JPanel {
                 Mover izquierda  ->  Tecla A  o  flecha izquierda
                 Mover derecha    ->  Tecla D  o  flecha derecha
                 Saltar           ->  Tecla W  o  flecha arriba
-                Ataque debil     ->  J
-                Ataque fuerte    ->  K
+                Ataque debil     ->  X
+                Ataque fuerte    ->  Z
                 Pausa            ->  ESC
                 """, "Controles", JOptionPane.PLAIN_MESSAGE);
     }

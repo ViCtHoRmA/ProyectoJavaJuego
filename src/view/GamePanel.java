@@ -12,7 +12,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int ANCHO = Principal.screenWidth;
     public static final int ALTO = Principal.screenHeigth;
     public static final int FPS = 60;
-    public static final int SUELO_NIVEL1 = 550;
+    public static final int SUELO_NIVEL1 = 510;
     public static final int SUELO_NIVEL2 = 660;
     public static final int SUELO_NIVEL3 = 480;
 

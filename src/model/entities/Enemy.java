@@ -1,5 +1,6 @@
 package model.entities;
 
+import controller.SoundManager;
 import view.GamePanel;
 
 public abstract class Enemy extends Entity{
@@ -44,6 +45,8 @@ public abstract class Enemy extends Entity{
             if (cooldownAtaque == 0) {
                 cooldownAtaque = intervaloAtaque;
                 danioAplicado = true;
+                SoundManager.getInstance().reproducir("zombie");
+
             }
         } else if (distanciaX <= radioDeteccion) {
             estadoIA = "persiguiendo";
@@ -53,6 +56,7 @@ public abstract class Enemy extends Entity{
             estadoIA = "patrullando";
             danioAplicado = false;
             patrullar();
+
         }
 
         if (cooldownAtaque > 0) cooldownAtaque--;
